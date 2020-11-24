@@ -1,0 +1,11 @@
+<h2>{{ displayHeader() }}</h2>
+
+<div class="game">
+  <div class="game-board">
+    <app-row *ngFor="let row of board"></app-row>
+  </div>
+
+  <app-reset-button class="game-reset"></app-reset-button>
+
+  <app-scoreboard class="game-scoreboard"></app-scoreboard>
+</div>

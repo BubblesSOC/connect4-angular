@@ -1,0 +1,20 @@
+.game {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.game-board {
+  background-color: #0077ee;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+}
+
+.game-reset,
+.game-scoreboard {
+  display: block;
+  flex-basis: 100%;
+}
