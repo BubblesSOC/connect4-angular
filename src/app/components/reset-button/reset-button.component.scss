@@ -1,0 +1,14 @@
+.game-reset-button {
+  margin: 10px;
+  padding: 4px;
+  border-radius: 3px;
+  color: white;
+
+  &.over {
+    background-color: green;
+  }
+
+  &.ongoing {
+    background-color: red;
+  }
+}

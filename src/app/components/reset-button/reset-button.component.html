@@ -1,1 +1,9 @@
-<p>reset-button works!</p>
+<button type="button"
+  class="game-reset-button"
+  [ngClass]="{
+    over: winner,
+    ongoing: !winner
+  }"
+  (click)="resetBoard.emit()">
+  {{ winner ? 'play again' : 'start over' }}
+</button>

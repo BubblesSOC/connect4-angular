@@ -6,7 +6,13 @@ import {
   Combination,
   winningCombinations
 } from '../config';
-import { GameState, BoardState, Color, WinningCoordinates } from '../types';
+import {
+  GameState,
+  BoardState,
+  Color,
+  WinningCoordinates,
+  GameScore
+} from '../types';
 @Injectable({
   providedIn: 'root'
 })
@@ -25,6 +31,10 @@ export class GameService {
     return this._getWinner(this._gameState.getValue());
   }
 
+  get score(): GameScore {
+    return this._gameState.getValue().score;
+  }
+
   private _gameState: BehaviorSubject<GameState>;
 
   constructor() {
@@ -41,6 +51,10 @@ export class GameService {
   $dropCoin(column: number, color: Color): void {
     const state = this._gameState.getValue();
     state.board = this._dropCoin(column, color);
+    const winner = this._getWinner(state);
+    if (winner) {
+      winner.color === 'red' ? state.score.red++ : state.score.yellow++;
+    }
     this._gameState.next(state);
   }
 

@@ -1,15 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  ChangeDetectionStrategy
+} from '@angular/core';
+import { WinningCoordinates } from '../../types';
 
 @Component({
   selector: 'app-reset-button',
   templateUrl: './reset-button.component.html',
-  styleUrls: ['./reset-button.component.scss']
+  styleUrls: ['./reset-button.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ResetButtonComponent implements OnInit {
+  @Input()
+  winner: WinningCoordinates | null = null;
 
-  constructor() { }
+  @Output()
+  resetBoard = new EventEmitter<void>();
 
-  ngOnInit(): void {
-  }
+  constructor() {}
 
+  ngOnInit(): void {}
 }

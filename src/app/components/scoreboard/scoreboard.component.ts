@@ -1,15 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ChangeDetectionStrategy
+} from '@angular/core';
 
 @Component({
   selector: 'app-scoreboard',
   templateUrl: './scoreboard.component.html',
-  styleUrls: ['./scoreboard.component.scss']
+  styleUrls: ['./scoreboard.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScoreboardComponent implements OnInit {
+  @Input()
+  redWins = 0;
 
-  constructor() { }
+  @Input()
+  yellowWins = 0;
 
-  ngOnInit(): void {
-  }
+  constructor() {}
 
+  ngOnInit(): void {}
 }

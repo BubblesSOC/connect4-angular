@@ -10,7 +10,15 @@
     </app-row>
   </div>
 
-  <app-reset-button class="game-reset"></app-reset-button>
+  <app-reset-button
+    class="game-reset"
+    [winner]="winner"
+    (resetBoard)="resetBoard()">
+  </app-reset-button>
 
-  <app-scoreboard class="game-scoreboard"></app-scoreboard>
+  <app-scoreboard
+    class="game-scoreboard"
+    [redWins]="score?.red"
+    [yellowWins]="score?.yellow">
+  </app-scoreboard>
 </div>

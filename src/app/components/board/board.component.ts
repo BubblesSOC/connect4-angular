@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BoardState, Color, WinningCoordinates } from '../../types';
+import { BoardState, Color, WinningCoordinates, GameScore } from '../../types';
 import { GameService } from '../../services/game.service';
 
 @Component({
@@ -11,11 +11,13 @@ export class BoardComponent implements OnInit {
   board: BoardState;
   color: Color; // current player
   winner: WinningCoordinates | null;
+  score: GameScore;
 
   constructor(private _gameService: GameService) {
     this.board = this._gameService.board;
     this.color = this._gameService.currentPlayer;
     this.winner = this._gameService.winner;
+    this.score = this._gameService.score;
   }
 
   dropCoin(column: number): void {
@@ -23,6 +25,10 @@ export class BoardComponent implements OnInit {
     if (!this.winner) {
       this._gameService.$dropCoin(column, this.color);
     }
+  }
+
+  resetBoard(): void {
+    this._gameService.$resetBoard();
   }
 
   displayHeader(): string {
@@ -39,6 +45,7 @@ export class BoardComponent implements OnInit {
       this.board = this._gameService.board;
       this.color = this._gameService.currentPlayer;
       this.winner = this._gameService.winner;
+      this.score = this._gameService.score;
     });
   }
 }

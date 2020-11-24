@@ -1,1 +1,14 @@
-<p>scoreboard works!</p>
+<dl class="game-scoreboard">
+  <dt class="scoreboard-player player-red">
+    <strong>Red</strong>
+  </dt>
+  <dd class="scoreboard-score score-red">
+    {{ redWins }} win{{ redWins === 1 ? '' : 's' }}
+  </dd>
+  <dt class="scoreboard-player player-yellow">
+    <strong>Yellow</strong>
+  </dt>
+  <dd class="scoreboard-score score-yellow">
+    {{ yellowWins }} win{{ yellowWins === 1 ? '' : 's' }}
+  </dd>
+</dl>

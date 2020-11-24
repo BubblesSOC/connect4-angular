@@ -1,0 +1,33 @@
+.game-scoreboard {
+  background-color: #ccc;
+  border: 1px solid #ccc;
+  display: inline-grid;
+  grid-gap: 1px 1px;
+  grid-template-areas: 'player-red player-yellow' 'score-red score-yellow';
+}
+
+.scoreboard-player,
+.scoreboard-score {
+  background-color: white;
+  padding: 6px 13px;
+}
+
+.scoreboard-score {
+  margin-left: 0;
+}
+
+.player-red {
+  grid-area: player-red;
+}
+
+.player-yellow {
+  grid-area: player-yellow;
+}
+
+.score-red {
+  grid-area: score-red;
+}
+
+.score-yellow {
+  grid-area: score-yellow;
+}
