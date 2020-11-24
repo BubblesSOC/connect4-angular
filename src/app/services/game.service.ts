@@ -1,80 +1,81 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { tap, shareReplay, share } from 'rxjs/operators';
 import {
   boardHeight,
   boardWidth,
   Combination,
   winningCombinations
 } from '../config';
-
-export type Color = 'yellow' | 'red' | null;
-export type BoardState = Color[][];
-
-export interface GameScore {
-  red: number;
-  yellow: number;
-}
-
-export interface GameState {
-  board: BoardState;
-  score: GameScore;
-}
-
-export interface WinningCoordinates {
-  row: number;
-  column: number;
-  combination: Combination;
-  color: Color;
-}
-
+import { GameState, BoardState, Color, WinningCoordinates } from '../types';
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
-  readonly initialState: GameState;
   readonly gameState$: Observable<GameState>;
+
+  get board(): BoardState {
+    return this._gameState.getValue().board;
+  }
+
+  get currentPlayer(): Color {
+    return this._getCurrentPlayer(this._gameState.getValue());
+  }
+
+  get winner(): WinningCoordinates | null {
+    return this._getWinner(this._gameState.getValue());
+  }
 
   private _gameState: BehaviorSubject<GameState>;
 
   constructor() {
-    this.initialState = {
-      board: this.getInitialBoard(),
+    this._gameState = new BehaviorSubject<GameState>({
+      board: this._getInitialBoard(),
       score: {
         red: 0,
         yellow: 0
       }
-    };
-    this._gameState = new BehaviorSubject<GameState>(this.initialState);
+    });
     this.gameState$ = this._gameState.asObservable();
   }
 
-  // dropCoin(column: number, color: Color): BoardState {
-  //   const state = this._gameState.getValue().board;
-  //   let validRow = null;
+  $dropCoin(column: number, color: Color): void {
+    const state = this._gameState.getValue();
+    state.board = this._dropCoin(column, color);
+    this._gameState.next(state);
+  }
 
-  //   for (let row = 0; row < state.length; row++) {
-  //     if (state[row][column] === null) {
-  //       validRow = row;
-  //     }
-  //   }
+  $resetBoard(): void {
+    const state = this._gameState.getValue();
+    state.board = this._getInitialBoard();
+    this._gameState.next(state);
+  }
 
-  //   if (validRow === null) {
-  //     return state;
-  //   }
+  private _dropCoin(column: number, color: Color): BoardState {
+    const state = this._gameState.getValue().board;
+    let validRow = null;
 
-  //   const newState = [...state];
-  //   newState[validRow] = [...newState[validRow]];
-  //   newState[validRow][column] = color;
+    for (let row = 0; row < state.length; row++) {
+      if (state[row][column] === null) {
+        validRow = row;
+      }
+    }
 
-  //   return newState;
-  // }
+    if (validRow === null) {
+      return state;
+    }
+
+    const newState = [...state];
+    newState[validRow] = [...newState[validRow]];
+    newState[validRow][column] = color;
+
+    return newState;
+  }
 
   /**
    * return an empty board according to the sizes
    * set in the config
    */
-  getInitialBoard(): BoardState {
+  private _getInitialBoard(): BoardState {
     const board: BoardState = [];
 
     for (let row = 0; row < boardHeight; row++) {
@@ -93,7 +94,7 @@ export class GameService {
   /**
    * Return the current player (as a color) given a board game.
    */
-  getCurrentPlayer(state: GameState): Color {
+  private _getCurrentPlayer(state: GameState): Color {
     let reds = 0;
     let yellows = 0;
 
@@ -114,9 +115,9 @@ export class GameService {
    * Test every possible winning combinations against the
    * current game board
    */
-  getWinner(state: GameState): WinningCoordinates | null {
+  private _getWinner(state: GameState): WinningCoordinates | null {
     for (const combination of winningCombinations) {
-      const winner = this.testCombination(state.board, combination);
+      const winner = this._testCombination(state.board, combination);
 
       if (winner) {
         return winner;
@@ -131,7 +132,7 @@ export class GameService {
    * @param state the game board
    * @param combination a winning combination configuration
    */
-  testCombination(
+  private _testCombination(
     state: BoardState,
     combination: Combination
   ): WinningCoordinates | null {
@@ -139,7 +140,12 @@ export class GameService {
       for (let column = 0; column < state[row].length; column++) {
         // only run if the current cell has a color
         if (state[row][column] !== null) {
-          const color = this.testCombinationAt(state, combination, row, column);
+          const color = this._testCombinationAt(
+            state,
+            combination,
+            row,
+            column
+          );
 
           if (color) {
             return { color, row, column, combination };
@@ -160,7 +166,7 @@ export class GameService {
    * @param row a row coordinate on the board
    * @param column a column coordinate on the board
    */
-  testCombinationAt(
+  private _testCombinationAt(
     state: BoardState,
     combination: Combination,
     row: number,

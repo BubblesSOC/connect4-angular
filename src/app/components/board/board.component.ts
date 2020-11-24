@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  GameService,
-  BoardState,
-  Color,
-  WinningCoordinates
-} from '../../services/game.service';
+import { BoardState, Color, WinningCoordinates } from '../../types';
+import { GameService } from '../../services/game.service';
 
 @Component({
   selector: 'app-board',
@@ -12,11 +8,22 @@ import {
   styleUrls: ['./board.component.scss']
 })
 export class BoardComponent implements OnInit {
-  board: BoardState | undefined;
-  color: Color | undefined;
-  winner: WinningCoordinates | null = null;
+  board: BoardState;
+  color: Color; // current player
+  winner: WinningCoordinates | null;
 
-  constructor(private _gameService: GameService) {}
+  constructor(private _gameService: GameService) {
+    this.board = this._gameService.board;
+    this.color = this._gameService.currentPlayer;
+    this.winner = this._gameService.winner;
+  }
+
+  dropCoin(column: number): void {
+    // we only allow a player to drop a coin if there is no winner yet
+    if (!this.winner) {
+      this._gameService.$dropCoin(column, this.color);
+    }
+  }
 
   displayHeader(): string {
     // only display the winner if there is one
@@ -28,11 +35,10 @@ export class BoardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._gameService.gameState$.subscribe(state => {
-      this.board = state.board;
-      this.color = this._gameService.getCurrentPlayer(state);
-      this.winner = this._gameService.getWinner(state);
-      console.log(this.board);
+    this._gameService.gameState$.subscribe(_ => {
+      this.board = this._gameService.board;
+      this.color = this._gameService.currentPlayer;
+      this.winner = this._gameService.winner;
     });
   }
 }

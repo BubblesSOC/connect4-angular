@@ -2,7 +2,12 @@
 
 <div class="game">
   <div class="game-board">
-    <app-row *ngFor="let row of board"></app-row>
+    <app-row *ngFor="let colors of board; let key = index"
+      [colors]="colors"
+      [row]="key"
+      [winner]="winner"
+      (dropCoin)="dropCoin($event)">
+    </app-row>
   </div>
 
   <app-reset-button class="game-reset"></app-reset-button>

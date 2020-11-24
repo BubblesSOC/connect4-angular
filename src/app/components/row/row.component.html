@@ -1,1 +1,9 @@
-<p>row works!</p>
+<div class="game-row">
+  <app-cell *ngFor="let color of colors; let index = index"
+    [row]="row"
+    [column]="index"
+    [color]="color"
+    [winner]="winner"
+    (dropCoin)="dropCoin.emit($event)">
+  </app-cell>
+</div>

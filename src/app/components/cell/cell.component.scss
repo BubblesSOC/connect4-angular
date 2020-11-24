@@ -1,0 +1,47 @@
+.game-cell {
+  border-radius: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  margin: 5px;
+
+  &:hover {
+    cursor: pointer;
+    background-color: lightgray;
+  }
+
+  &.red {
+    background-color: red;
+    cursor: not-allowed;
+  }
+
+  &.yellow {
+    background-color: yellow;
+    cursor: not-allowed;
+  }
+
+  &.animated {
+    animation-name: animated;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+
+    transform-style: preserve-3d;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    font-size: 40px;
+    color: black;
+
+    &::after {
+      content: '×';
+    }
+  }
+}
+
+@keyframes animated {
+  50% {
+    transform: rotateY(180deg);
+  }
+}
