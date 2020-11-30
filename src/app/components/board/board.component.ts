@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { BoardState, Color, WinningCoordinates, GameScore } from '../../types';
 import { GameService } from '../../services/game.service';
 
@@ -7,11 +8,13 @@ import { GameService } from '../../services/game.service';
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss']
 })
-export class BoardComponent implements OnInit {
+export class BoardComponent implements OnInit, OnDestroy {
   board: BoardState;
   color: Color; // current player
   winner: WinningCoordinates | null;
   score: GameScore;
+
+  private _sub: Subscription | undefined;
 
   constructor(private _gameService: GameService) {
     this.board = this._gameService.board;
@@ -41,11 +44,15 @@ export class BoardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._gameService.gameState$.subscribe(_ => {
+    this._sub = this._gameService.gameState$.subscribe(_ => {
       this.board = this._gameService.board;
       this.color = this._gameService.currentPlayer;
       this.winner = this._gameService.winner;
       this.score = this._gameService.score;
     });
+  }
+
+  ngOnDestroy(): void {
+    this._sub?.unsubscribe();
   }
 }
